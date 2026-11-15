@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Truco na Praça</title><link rel="stylesheet" href="style.css"></head><body>
+<div id="menu" class="ov"><div class="box"><h1>TRUCO NA PRAÇA</h1>
+<p>Uma boa mão, um bom blefe e coragem para trucar.</p>
+<button id="play" class="big">JOGAR</button>
+<label>Dificuldade da IA <select id="diff"><option value="0">Fácil</option><option value="1">Normal</option><option value="2">Difícil</option></select></label>
+<label>Partida <select id="bo"><option value="1">Melhor de 1</option><option value="3">Melhor de 3</option></select></label>
+<label>Sons <input type="checkbox" id="snd"></label>
+<div class="row"><button id="rules">Regras</button><button id="stats">Estatísticas</button><button id="tests">Testes</button></div></div></div>
+<main id="table">
+<div id="hud"><span id="sc"></span><span id="val"></span><span id="rd"></span><button id="quit">Menu</button></div>
+<div id="opp" class="hand"></div>
+<div id="mid"><div id="vira"></div><div id="cp1" class="slot"></div><div id="cp0" class="slot"></div><div id="log"></div></div>
+<div id="msg"></div>
+<div id="me" class="hand"></div>
+<div id="acts"><button id="btnT">TRUCO</button><button id="btnH">ESCONDER</button></div>
+</main>
+<div id="modal" class="ov" hidden></div>
+<script src="script.js"></script></body></html>
