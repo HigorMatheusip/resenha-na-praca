@@ -27,6 +27,54 @@ body{font:14px system-ui,sans-serif;background:var(--bg);color:var(--fg);display
 #over.on{display:flex}#over h2{font-size:clamp(20px,5vw,44px);margin:0 0 6px}
 button,select{font:inherit;padding:7px 12px;border-radius:8px;border:1px solid #0004;background:var(--card);color:var(--fg)}
 button{cursor:pointer;font-weight:600}#bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+:root{padding:0}
+body{position:relative;display:block;width:100vw;height:100dvh;padding:0;overflow:hidden;background:#08160f;color:#f3f6f2;font:14px system-ui,sans-serif}
+#wrap{position:absolute;inset:0;display:grid;place-items:center;width:100vw;height:100dvh;max-width:none;z-index:0}
+canvas{width:min(100vw,calc(100dvh * 1.8333));height:auto;max-height:100dvh;border-radius:0}
+#hud{position:absolute;top:env(safe-area-inset-top,0px);left:0;z-index:2;display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,1.25fr) minmax(0,1fr);gap:clamp(4px,1vw,10px);width:100%;padding:clamp(4px,1vw,10px);pointer-events:none}
+.pl{min-width:0;padding:clamp(4px,1vh,8px) clamp(6px,1vw,12px);border:1px solid #ffffff25;background:#07130edb;color:#f3f6f2;border-radius:12px;font-size:clamp(9px,1.5vw,13px)}
+.pl em{font-size:clamp(17px,3vw,24px)}
+#mid{min-width:0;gap:4px;padding:4px 8px;border:1px solid #ffffff20;border-radius:12px;background:#07130edb;color:#f3f6f2;font-size:clamp(10px,1.5vw,13px)}
+#mid small{font-size:clamp(9px,1.2vw,11px)}
+#pw{height:8px}
+#bar{position:absolute;bottom:env(safe-area-inset-bottom,0px);left:0;z-index:3;display:flex;justify-content:center;gap:8px;width:100%;padding:8px;pointer-events:none}
+#bar>*{pointer-events:auto}
+#bar button{min-height:40px;padding:8px 14px;border:1px solid #ffffff25;background:#f4f7f4;color:#173b26;border-radius:12px;box-shadow:0 4px 14px #0005}
+#bar button:hover{background:#dcebe0}
+#settingsOpen{font-weight:700}
+#settingsPanel{position:fixed;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:#0009}
+#settingsPanel[hidden]{display:none}
+.settings-card{display:flex;flex-direction:column;gap:14px;width:min(100%,420px);max-height:100%;overflow:auto;padding:20px;background:#f6f4ec;color:#202b23;border:1px solid #ffffff80;border-radius:20px;box-shadow:0 18px 60px #0008}
+.settings-head,.setting-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.settings-head h2{margin:0;font-size:22px}
+.settings-card label{display:flex;flex-direction:column;gap:6px;font-weight:600}
+.settings-card select{width:100%;min-height:42px}
+.settings-card button{min-height:42px}
+#settingsClose{width:42px;padding:6px;font-size:21px}
+#displayMode{background:#176c3a;color:#fff;border:0}
+#displayStatus{min-height:1.4em;margin:0;text-align:center;font-size:13px;color:#415447}
+#over{z-index:1}
+@media(max-width:600px){
+ .pl{padding:4px 6px}
+ #mid{padding:3px 4px}
+ #mid small{display:none}
+ #bar{gap:6px;padding:6px}
+ #bar button{min-height:38px;padding:7px 12px}
+ .settings-card{padding:16px}
+}
+@media(max-height:520px) and (orientation:landscape){
+ #wrap canvas{width:min(100vw,calc((100dvh - 88px)*1.8333))}
+ #hud{position:absolute;inset:0;display:block;padding:0}
+ .pl{position:absolute;top:50%;width:clamp(96px,17vw,138px);padding:6px;transform:translateY(-50%);font-size:9px}
+ #p0{left:max(4px,env(safe-area-inset-left))}
+ #p1{right:max(4px,env(safe-area-inset-right))}
+ .pl em{font-size:16px}
+ .dots{display:none}
+ #mid{position:absolute;top:max(2px,env(safe-area-inset-top));left:50%;width:min(44vw,290px);height:34px;transform:translateX(-50%);gap:2px;padding:3px 5px}
+ #mid small,#pw{display:none}
+ #bar{bottom:max(2px,env(safe-area-inset-bottom));padding:4px;gap:5px}
+ #bar button{min-height:32px;padding:5px 10px}
+}
 </style></head><body>
 <div id="hud">
  <div class="pl" id="p0"><b id="t0"></b><em id="n0">7</em> bolas restantes<div class="dots" id="d0"></div></div>
@@ -35,11 +83,16 @@ button{cursor:pointer;font-weight:600}#bar{display:flex;gap:8px;flex-wrap:wrap;j
 </div>
 <div id="wrap"><canvas id="c"></canvas><div id="banner"></div><div id="msg"></div>
  <div id="over"><div><h2 id="ot"></h2><p id="op"></p><button id="rv">Revanche</button></div></div></div>
-<div id="bar">
- <button id="rs">Reiniciar</button>
- <select id="mode"><option value="bot">Contra o Bot</option><option value="pvp">2 jogadores (local)</option></select>
- <select id="lvl"><option value="0">Bot: Fácil</option><option value="1" selected>Bot: Médio</option><option value="2">Bot: Difícil</option></select>
- <button id="sn">🔊</button>
+<div id="bar"><button id="rs">Reiniciar</button><button id="settingsOpen" aria-label="Abrir configurações" title="Configurações">⚙ Configurações</button></div>
+<div id="settingsPanel" hidden role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+ <section class="settings-card">
+  <div class="settings-head"><h2 id="settingsTitle">Configurações</h2><button id="settingsClose" aria-label="Fechar configurações">×</button></div>
+  <label>Modo de jogo<select id="mode"><option value="bot">Contra o Bot</option><option value="pvp">2 jogadores (local)</option></select></label>
+  <label>Dificuldade do bot<select id="lvl"><option value="0">Fácil</option><option value="1" selected>Médio</option><option value="2">Difícil</option></select></label>
+  <div class="setting-row"><strong>Sons</strong><button id="sn" type="button" aria-label="Alternar som">🔊</button></div>
+  <button id="displayMode">⛶ Tela cheia e paisagem</button>
+  <p id="displayStatus" role="status" aria-live="polite"></p>
+ </section>
 </div>
 <script>
 'use strict';
@@ -204,6 +257,28 @@ function reset(){
 }
 $('rs').onclick=reset;$('rv').onclick=()=>{starter=1-starter;reset()};$('mode').onchange=reset;
 $('sn').onclick=()=>{mute=!mute;$('sn').textContent=mute?'🔇':'🔊'};
+const settingsPanel=$('settingsPanel');
+$('settingsOpen').onclick=()=>{settingsPanel.hidden=false};
+$('settingsClose').onclick=()=>{settingsPanel.hidden=true};
+settingsPanel.addEventListener('click',e=>{if(e.target===settingsPanel)settingsPanel.hidden=true});
+settingsPanel.addEventListener('keydown',e=>{if(e.key==='Escape')settingsPanel.hidden=true});
+async function enableFullscreenLandscape(){
+ const status=$('displayStatus'),root=document.documentElement;
+ status.textContent='Ativando tela cheia…';
+ try{
+  if(!document.fullscreenElement){
+   const request=root.requestFullscreen||root.webkitRequestFullscreen;
+   if(typeof request!=='function'){status.textContent='Este navegador não oferece tela cheia. Gire o aparelho manualmente.';return}
+   await request.call(root)
+  }
+ }catch(error){status.textContent='O navegador bloqueou a tela cheia. Tente pelo menu do navegador.';console.warn('Não foi possível ativar tela cheia:',error);return}
+ const orientation=screen.orientation;
+ if(orientation&&typeof orientation.lock==='function'){
+  try{await orientation.lock('landscape');status.textContent='Tela cheia ativada no modo horizontal.'}
+  catch(error){status.textContent='Tela cheia ativada. Gire o celular para a horizontal se não girar sozinho.';console.info('O navegador não permitiu travar a orientação:',error)}
+ }else status.textContent='Tela cheia ativada. Gire o celular para a horizontal.'
+}
+$('displayMode').onclick=enableFullscreenLandscape;
 
 /* ================= DESENHO ================= */
 function rr(x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r)}
