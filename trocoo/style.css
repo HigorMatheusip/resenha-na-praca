@@ -32,3 +32,16 @@ button:disabled{opacity:.35;cursor:default}button.on{background:#1f6b2c}
 .big{font-size:22px;padding:14px}.row,.cs,.bs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 .cs{--w:70px}
 #hud #sc{order:-1;flex:1 0 100%;text-align:center;font-size:clamp(20px,6vw,38px);background:#3a2a08;color:#ffe27a;border-radius:10px;padding:4px 10px;letter-spacing:1px;box-shadow:0 3px #0005}
+@media (orientation:landscape) and (max-height:700px){
+ #table{--w:clamp(38px,10.5vh,56px);width:100vw;height:100dvh;border-width:8px;border-radius:14px;padding:4px;gap:2px;grid-template-rows:auto minmax(0,.8fr) minmax(0,1.45fr) minmax(0,.8fr) auto}
+ #hud{min-height:0;flex-wrap:nowrap;gap:3px 8px;font-size:clamp(10px,2.4vh,12px)}
+ #hud button,button{padding:4px 8px;white-space:nowrap}
+ #hud #sc{order:0;flex:0 1 auto;font-size:clamp(14px,4.2vh,20px);padding:3px 6px;letter-spacing:0;white-space:nowrap}
+ #hud #val,#hud #rd{white-space:nowrap}
+ .hand{min-height:0;gap:calc(var(--w)*.08)}
+ #mid{min-height:0;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+ .slot{min-height:0}
+ #log{max-height:100%;overflow:auto;font-size:clamp(9px,2.2vh,12px)}
+ #acts{min-height:0;gap:8px;padding-top:0}
+ #acts button{padding:5px 12px;font-size:clamp(11px,2.6vh,14px)}
+}
