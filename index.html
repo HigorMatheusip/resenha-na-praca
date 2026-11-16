@@ -66,14 +66,37 @@ canvas{display:block;width:100%;height:100%}
 #sinucaGame{position:fixed;inset:0;z-index:30;display:none;background:#000d}
 #sinucaGame iframe{width:100%;height:100%;border:0;display:block}
 #sinucaClose{position:absolute;right:12px;top:12px;z-index:1;background:#7a1f1f;color:#fff;border:2px solid #fff;border-radius:8px;padding:9px 14px;font:700 14px system-ui;cursor:pointer}
+/* HUD principal */
+#hud{left:10px;right:auto;top:calc(env(safe-area-inset-top,0px) + 10px);gap:7px;z-index:15;max-width:calc(100vw - 180px)}
+#hud button{width:42px;height:42px;padding:0;border-radius:13px;background:rgba(18,25,36,.78);color:#fff;font-size:19px;box-shadow:0 3px 12px #0004}
+#hud button:hover{background:rgba(38,51,70,.94)}
+#hud button.on{background:#2b5fb0}
+#hud #nick,#hud #who{display:none}
+#hud #bs{display:none;width:42px;height:42px;margin:0;background:#218838;color:#fff}
+#mm{top:calc(env(safe-area-inset-top,0px) + 10px);right:10px;z-index:6;border:1px solid #fff8;box-shadow:0 3px 12px #0005}
+#wal{position:fixed;top:calc(env(safe-area-inset-top,0px) + 130px);right:10px;z-index:8;padding:5px 10px;border-radius:8px;background:rgba(12,18,26,.78);color:#6eff8a;font:700 18px/1.2 system-ui;letter-spacing:.3px;text-shadow:0 1px 3px #000;backdrop-filter:blur(6px)}
+#poi{top:calc(env(safe-area-inset-top,0px) + 108px)}
+#em{bottom:130px;z-index:13}
+#chatPanel,#songPanel{z-index:14}
+#ctx{z-index:10}
+@media (max-width:700px){
+ #hud{right:168px;max-width:none;gap:5px}
+ #hud button,#hud #bs{width:40px;height:40px;border-radius:12px}
+ #poi{top:calc(env(safe-area-inset-top,0px) + 104px)}
+ #wal{top:calc(env(safe-area-inset-top,0px) + 128px);font-size:16px}
+}
+@media (pointer:coarse){
+ #em{bottom:calc(env(safe-area-inset-bottom,0px) + 280px)}
+ #chatPanel,#songPanel{bottom:calc(env(safe-area-inset-bottom,0px) + 185px)}
+}
 </style></head><body>
 <div id="login" style="display:flex"><div class="card"><h2>Resenha na praça</h2><p>Versão beta 0.1</p><div id="av"></div>
 <label>Nome de usuário</label><input id="lname" maxlength="14" placeholder="Seu nome" autocomplete="off">
 <label>Personagem</label><div id="gen"><button data-g="0">Masculino</button><button data-g="1">Feminino</button></div>
 <label>Cor de pele</label><div id="skins"></div>
 <button id="go">Entrar na sala pública · conectando…</button></div></div>
-<div id="hud"><button id="bg" class="on">Jogar</button><button id="bt">Planta (topo)</button><button id="bp">3ª pessoa</button><button id="bs">🔊 Som do Wallace</button><button id="bu">👤 Personagem</button><button id="be">💃 Emotes</button><button id="chatToggle">💬 Chat</button><button id="songToggle">🎵 Músicas</button><input id="nick" maxlength="14" placeholder="Seu nome"><span id="who">Offline</span><span id="wal"></span></div><canvas id="mm" width="150" height="112"></canvas><div id="poi"></div><div id="ytwin" style="display:none"><button id="ytx">✕</button><div id="yf"></div></div><div id="em" style="display:none"><button data-e="funk">🕺 Dançar funk (1)</button><button data-e="forro">💃 Forró a dois (2)</button><button data-e="wave">👋 Acenar (3)</button><button data-e="bow" id="ebow" style="display:none">🏹 Arco e flecha (4)</button></div><div id="inv" style="display:none"><span id="invt"></span><div><button id="iy">Aceitar</button><button id="in">Recusar</button></div></div><button id="ctx" style="display:none"></button><div id="toast"></div><div id="speechLayer" aria-hidden="true"></div><div id="chatPanel"><div class="social-head"><span>💬 Chat</span><button id="chatClose" type="button" aria-label="Fechar chat">✕</button></div><div id="chatLog" aria-live="polite"></div><form id="chatForm" class="social-form"><input id="chatInput" maxlength="120" placeholder="Escreva uma mensagem..." autocomplete="off"><button type="submit">Enviar</button></form><div class="social-note">Até 30 mensagens no chat · balões somem em 8 s</div></div><div id="songPanel"><div class="social-head"><span>🎵 Sugestões de música</span><button id="songClose" type="button" aria-label="Fechar sugestões">✕</button></div><ol id="songList"></ol><form id="songForm" class="social-form"><input id="songInput" maxlength="100" placeholder="Música e artista..." autocomplete="off"><button type="submit">Sugerir</button></form><div class="social-note">Lista compartilhada · máximo de 20 sugestões</div></div><div id="rad" style="display:none"><button id="radx">✕</button><b>Carro do Wallace · Som</b><input id="yt" type="text" placeholder="Link do YouTube"><button id="ytp">▶ YouTube (todos)</button><button id="tab">🎧 Capturar aba (3D)</button><label>Arquivo de áudio<input id="fl" type="file" accept="audio/*" hidden></label><button id="stp">■ Parar</button><div id="lbl"></div><small><b>Arquivo</b> e <b>Capturar aba</b> tocam em 3D de verdade para todos (HRTF: o som vem do porta-malas, muda de lado e cai com a distância). Para o YouTube em 3D: abra o vídeo em outra aba, dê play, clique em Capturar aba e marque “compartilhar áudio da aba” (Chrome/Edge no PC). O botão <b>YouTube</b> usa o player incorporado: ressincroniza a cada 2 s e tem volume por distância, sem direção. O player só aparece perto do carro (✕ esconde).</small></div>
-<div id="pad"><div id="dp"><span></span><button data-k="w">▲</button><span></span><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><div id="ac"><button data-k=" ">⤒</button><button id="run">🏃</button><button id="vw">👁</button><button id="snd">🔊</button><button id="emb">💃</button></div></div>
+<div id="hud"><button id="viewToggle" type="button" aria-label="Mudar visão" title="Mudar visão">👁</button><button id="bu" type="button" aria-label="Personagem" title="Personagem">👤</button><button id="be" type="button" aria-label="Emotes" title="Emotes">💃</button><button id="chatToggle" type="button" aria-label="Chat" title="Chat">💬</button><button id="songToggle" type="button" aria-label="Músicas" title="Músicas">🎵</button><button id="bs" type="button" aria-label="Som do Wallace" title="Som do Wallace" style="display:none">🔊</button><input id="nick" maxlength="14" placeholder="Seu nome"><span id="who">Offline</span></div><canvas id="mm" width="150" height="112"></canvas><div id="wal" aria-label="Dinheiro">R$ 200</div><div id="poi"></div><div id="ytwin" style="display:none"><button id="ytx">✕</button><div id="yf"></div></div><div id="em" style="display:none"><button data-e="funk">🕺 Dançar funk (1)</button><button data-e="forro">💃 Forró a dois (2)</button><button data-e="wave">👋 Acenar (3)</button><button data-e="bow" id="ebow" style="display:none">🏹 Arco e flecha (4)</button></div><div id="inv" style="display:none"><span id="invt"></span><div><button id="iy">Aceitar</button><button id="in">Recusar</button></div></div><button id="ctx" style="display:none"></button><div id="toast"></div><div id="speechLayer" aria-hidden="true"></div><div id="chatPanel"><div class="social-head"><span>💬 Chat</span><button id="chatClose" type="button" aria-label="Fechar chat">✕</button></div><div id="chatLog" aria-live="polite"></div><form id="chatForm" class="social-form"><input id="chatInput" maxlength="120" placeholder="Escreva uma mensagem..." autocomplete="off"><button type="submit">Enviar</button></form><div class="social-note">Até 30 mensagens no chat · balões somem em 8 s</div></div><div id="songPanel"><div class="social-head"><span>🎵 Sugestões de música</span><button id="songClose" type="button" aria-label="Fechar sugestões">✕</button></div><ol id="songList"></ol><form id="songForm" class="social-form"><input id="songInput" maxlength="100" placeholder="Música e artista..." autocomplete="off"><button type="submit">Sugerir</button></form><div class="social-note">Lista compartilhada · máximo de 20 sugestões</div></div><div id="rad" style="display:none"><button id="radx">✕</button><b>Carro do Wallace · Som</b><input id="yt" type="text" placeholder="Link do YouTube"><button id="ytp">▶ YouTube (todos)</button><button id="tab">🎧 Capturar aba (3D)</button><label>Arquivo de áudio<input id="fl" type="file" accept="audio/*" hidden></label><button id="stp">■ Parar</button><div id="lbl"></div><small><b>Arquivo</b> e <b>Capturar aba</b> tocam em 3D de verdade para todos (HRTF: o som vem do porta-malas, muda de lado e cai com a distância). Para o YouTube em 3D: abra o vídeo em outra aba, dê play, clique em Capturar aba e marque “compartilhar áudio da aba” (Chrome/Edge no PC). O botão <b>YouTube</b> usa o player incorporado: ressincroniza a cada 2 s e tem volume por distância, sem direção. O player só aparece perto do carro (✕ esconde).</small></div>
+<div id="pad"><div id="dp"><span></span><button data-k="w">▲</button><span></span><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><div id="ac"><button data-k=" ">⤒</button><button id="run" type="button" aria-label="Correr" aria-pressed="false">🏃</button><button id="vw" type="button" aria-label="Mudar visão">👁</button><button id="snd" type="button" style="display:none" aria-label="Som do Wallace">🔊</button><button id="emb" type="button" aria-label="Emotes">💃</button></div></div>
 <div id="hint">WASD andar · Shift correr · Espaço pular · mouse/arraste olha ao redor · V = 3ª pessoa</div>
 <div id="trucoGame"><iframe title="Minigame de truco" allowfullscreen></iframe><button id="trucoClose">Fechar truco</button></div>
 <div id="sinucaGame"><iframe title="Minigame de sinuca" allowfullscreen></iframe><button id="sinucaClose">Fechar sinuca</button></div>
@@ -144,7 +167,7 @@ function tree(x,z,s=1){CI.push([x,z,.5*s]);const g=new THREE.Group();g.position.
  [[0,3,0,1.7],[.9,2.5,.4,1.3],[-.8,2.6,-.3,1.4]].forEach(([a,b,c,r],i)=>{const f=new THREE.Mesh(new THREE.IcosahedronGeometry(r*s,1),M([0x3f7d3c,0x4f8f45,0x356b36][i],{flatShading:true}));f.position.set(a*s,b*s,c*s);f.castShadow=true;g.add(f)})}
 function palm(x,z){CI.push([x,z,.4]);const g=new THREE.Group();g.position.set(x,.3,z);S.add(g);const t=new THREE.Mesh(new THREE.CylinderGeometry(.14,.22,4.2,6),M(0x7a5c3e));t.position.y=2.1;t.castShadow=true;g.add(t);
  for(let i=0;i<7;i++){const f=new THREE.Mesh(new THREE.BoxGeometry(2.6,.05,.5),M(0x3f8a3a));f.position.y=4.2;f.rotation.y=i*.9;f.rotation.z=-.35;f.geometry.translate(1.3,0,0);f.castShadow=true;g.add(f)}}
-function lamp(x,z){CI.push([x,z,.2]);box(.12,3.6,.12,M(0x2a2f36),x,.3,z);const b=new THREE.Mesh(new THREE.SphereGeometry(.25,10,8),M(0xfff3c4,{emissive:0xffe9a0,emissiveIntensity:.5}));b.position.set(x,4.1,z);S.add(b)}
+function lamp(x,z,baseY=.3){CI.push([x,z,.2]);box(.12,3.6,.12,M(0x2a2f36),x,baseY,z);const b=new THREE.Mesh(new THREE.SphereGeometry(.25,10,8),M(0xfff3c4,{emissive:0xffe9a0,emissiveIntensity:.5}));b.position.set(x,baseY+3.8,z);S.add(b)}
 
 /* IGREJA (frente voltada para o sul/baixo; torre à direita). Origem local: frente da nave, centro da nave */
 const CH=new THREE.Group();CH.position.set(X(777),1.0,Z(480));S.add(CH);
@@ -198,11 +221,11 @@ const hr=new THREE.Mesh(new THREE.ConeGeometry(7.1,3.4,4),woodRoof);hr.position.
 garden([[242,322],[433,300],[438,462],[292,484]]);
 const fx=X(365),fz=Z(408);const fb=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.3,.6,24),M(0xf4f2ec));fb.position.set(fx,.55,fz);S.add(fb);
 const fw=new THREE.Mesh(new THREE.CylinderGeometry(1.1,1.1,.1,24),M(0x5aa8d0));fw.position.set(fx,.88,fz);S.add(fw);
-palm(X(353),Z(318));tree(X(308),Z(380),.9);tree(X(275),Z(265),.9);[[378,265],[423,272],[402,432],[335,440]].forEach(([a,b])=>lamp(X(a),Z(b)));
+palm(X(380),Z(400));tree(X(308),Z(380),.9);tree(X(330),Z(355),.9);[[385,335,.3],[425,380,.3],[402,432,.3],[335,440,.3]].forEach(([a,b,y])=>lamp(X(a),Z(b),y));
 /* JARDIM PRINCIPAL */
 garden([[445,815],[700,812],[895,862],[885,1000],[780,1022],[400,1018],[345,878]]);
-[[845,800,1.3],[400,860,1.2],[540,920,1.2],[650,950,1.1],[855,950,.8],[850,985,.5]].forEach(([a,b,s])=>tree(X(a),Z(b),s));
-[[607,780],[530,800],[785,822]].forEach(([a,b])=>lamp(X(a),Z(b)));box(3,.5,.6,M(0x3a6fc0),X(675),.3,Z(822));
+[[780,890,1.3],[445,880,1.2],[540,920,1.2],[650,950,1.1],[855,950,.8],[850,985,.5]].forEach(([a,b,s])=>tree(X(a),Z(b),s));
+[[610,855,.3],[530,855,.3],[785,875,.3]].forEach(([a,b,y])=>lamp(X(a),Z(b),y));box(3,.5,.6,M(0x3a6fc0),X(675),.3,Z(845));
 {
  const start={x:10.8,z:28.9},end={x:-28,z:26.7},length=Math.hypot(end.x-start.x,end.z-start.z),sections=Math.ceil(length/2.2),span=length/sections;
  const g=new THREE.Group(),iron=M(0x626a6c,{metalness:.45,roughness:.55});g.position.set(start.x,0,start.z);g.rotation.y=-Math.atan2(end.z-start.z,end.x-start.x);S.add(g);
@@ -261,14 +284,14 @@ function bld(a,b,c,d,col,wh=4.4,roadFace=0){const w=U(c-a),l=U(d-b),cx=X((a+c)/2
  box(.58,1.02,2.8,barWood,bx-2.05,.04,bz+1.4);box(.78,.12,3,M(0x4b2f20),bx-2.05,1.06,bz+1.4);
  OB.push([bx-2.36,bz-.1,bx-1.74,bz+2.9]);
  const tableX=BAR_TABLE.x,tableZ=BAR_TABLE.z;
- [-.55,.55].forEach(dx=>[-.9,.9].forEach(dz=>box(.12,.72,.12,barWood,tableX+dx,.16,tableZ+dz)));
+ [-.55,.55].forEach(dx=>[-.9,.9].forEach(dz=>box(.12,.86,.12,barWood,tableX+dx,.02,tableZ+dz)));
  box(1.42,.2,2.2,barWood,tableX,.88,tableZ);
  box(1.18,.045,2.0,felt,tableX,1.08,tableZ);
  const ballColors=[0xf5f0d8,0xd43b36,0xf5f0d8,0xd43b36];
  [[-.28,-.45],[.22,-.05],[0,.5],[.3,.75]].forEach(([dx,dz],i)=>{const ball=new THREE.Mesh(new THREE.SphereGeometry(.075,12,10),M(ballColors[i],{roughness:.35}));ball.position.set(tableX+dx,1.19,tableZ+dz);ball.castShadow=true;S.add(ball)});
  OB.push([tableX-.73,tableZ-1.15,tableX+.73,tableZ+1.15]);
 }
-[[125,428],[127,572],[127,677],[127,830]].forEach(([a,b])=>{box(1.9,.8,4,M(0x6a6f78),X(a),.1,Z(b));});
+[[125,428],[127,572],[127,677],[127,830]].forEach(([a,b])=>{box(1.9,.8,4,M(0x6a6f78),X(a),0,Z(b));});
 [[0,-140,70,.4,0x3f6f36],[-110,-100,60,.4,0x497b3d],[120,-110,65,.35,0x426f38],[0,150,70,.25,0x4a7b3c]].forEach(([x,z,r,k,c])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,12),M(c,{flatShading:true}));m.scale.y=k;m.position.set(x,-r*.1,z);S.add(m)});
 
 /* OBRAS DO MIRANTE */
@@ -337,7 +360,7 @@ const glow=new THREE.PointLight(0x2255ff,0,14);glow.position.set(0,1,2.6);car.ad
 {const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='rgba(20,20,30,.75)';g.fillRect(0,20,512,88);g.fillStyle='#fff';g.font='bold 52px system-ui';g.textAlign='center';g.fillText('Carro do Wallace',256,82);
  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthWrite:false}));sp.scale.set(3.6,.9,1);sp.position.set(0,3,0);car.add(sp)}
 OB.push([CARX-1,CARZ-2.2,CARX+1,CARZ+2.3]);
-const $=i=>document.getElementById(i),rad=$('rad'),yf=$('yf'),lbl=$('lbl'),ytwin=$('ytwin'),toastEl=$('toast'),NEAR=14,SHOW=18,FAR=24;
+const $=i=>document.getElementById(i),rad=$('rad'),yf=$('yf'),lbl=$('lbl'),ytwin=$('ytwin'),toastEl=$('toast'),SOUND_BUTTON_RADIUS=7.5,NEAR=14,SHOW=18,FAR=24;
 let AC,anl,pan,curG=null,loc=null,outS=null,netRoom=null,ytp=null,pulse=0,hue=.6,ytT=0,djPeerId=null,ytHide=false,ytDJ=false,seq=0,lastSq=0,ytS=0;const inS=new Map();
 const CHAT_LIMIT=30,SONG_LIMIT=20,BUBBLE_TTL=8000,chatMessages=[],songSuggestions=[],speechBySpeaker=new Map(),seenSocialIds=new Set(),speechLayer=$('speechLayer');
 let socialSend=()=>{};
@@ -349,7 +372,7 @@ function dCar(){return Math.hypot(PL.x-CARX,PL.z-(CARZ+1.5))}
 function toast(t,ms){toastEl.textContent=t;toastEl.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>toastEl.style.display='none',ms||1800)}
 function togRad(force){const o=force===undefined?rad.style.display=='none':force;if(o&&dCar()>NEAR){toast('Chegue perto do carro do Wallace para mexer no som');return}rad.style.display=o?'block':'none';if(o&&document.exitPointerLock)document.exitPointerLock()}
 $('bs').onclick=()=>togRad();$('radx').onclick=()=>togRad(false);$('ytx').onclick=()=>{ytHide=true;ytwin.classList.add('far')};
-$('run').onclick=()=>{K.shift=!K.shift;$('run').classList.toggle('on',!!K.shift)};$('vw').onclick=()=>B.p.onclick();$('snd').onclick=()=>togRad();
+$('run').onclick=()=>{K.shift=!K.shift;$('run').classList.toggle('on',!!K.shift);$('run').setAttribute('aria-pressed',String(!!K.shift))};$('vw').onclick=cycleView;$('snd').onclick=()=>togRad();
 if(touch){$('hint').style.display='none';$('tab').style.display='none'}else if(!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia))$('tab').style.display='none';
 function attach(node){const g=ac().createGain();node.connect(g);g.connect(anl);curG=g}
 function out(stream){outS=stream;if(netRoom)netRoom.addStream(stream)}
@@ -376,7 +399,8 @@ $('ytp').onclick=()=>{const m=$('yt').value.match(/(?:v=|youtu\.be\/|embed\/|sho
 function syncYT(dj){if(!ytp||typeof ytp.getCurrentTime!='function'||!Number.isFinite(dj.ct))return;const tg=dj.ct+(dj.pl?.2:0);
  if(Math.abs(ytp.getCurrentTime()-tg)>.6)ytp.seekTo(tg,true);const st=ytp.getPlayerState();if(dj.pl&&st!==1&&st!==3)ytp.playVideo();else if(!dj.pl&&st===1)ytp.pauseVideo()}
 function carFx(dt,t){let p=0;const live=loc||djPeerId,dc=dCar();
- ytwin.style.display=ytp?'block':'none';ytwin.classList.toggle('far',!(ytp&&dc<SHOW&&!ytHide));if(rad.style.display!='none'&&dc>FAR)rad.style.display='none';
+ const soundNearby=dc<SOUND_BUTTON_RADIUS;$('bs').style.display=soundNearby?'inline-block':'none';$('snd').style.display=soundNearby?'inline-block':'none';
+ ytwin.style.display=ytp?'block':'none';ytwin.classList.toggle('far',!(ytp&&dc<SHOW&&!ytHide));if(rad.style.display!='none'&&dc>NEAR)rad.style.display='none';
  if(ytDJ&&ytp&&typeof ytp.getCurrentTime=='function'&&t-ytS>2000){ytS=t;mpSet({ct:+ytp.getCurrentTime().toFixed(2),pl:ytp.getPlayerState()==1?1:0,sq:++seq})}
  if(live&&anl){const d=new Uint8Array(anl.frequencyBinCount);anl.getByteFrequencyData(d);p=(d[0]+d[1]+d[2]+d[3])/1020}else if(ytp)p=(Math.sin(t*.013)*.5+.5)**2;
  pulse+=(p-pulse)*Math.min(1,dt*14);const on=live||ytp;cones.forEach(c=>c.scale.z=1+pulse*1.2);sub.scale.set(1+pulse*.02,1+pulse*.03,1);
@@ -437,16 +461,18 @@ const Pc=new THREE.PerspectiveCamera(55,1,.2,600);Pc.rotation.order='YXZ';S.add(
 let mode='game',yaw=0,pitch=0,cy=0,cp=0,dist=4.5,wt=0,tp=0;
 function size(){R.setSize(innerWidth,innerHeight,false);const a=innerWidth/innerHeight,h=Math.max(27.15,36.2/a);Object.assign(O,{left:-h*a,right:h*a,top:h,bottom:-h});O.updateProjectionMatrix();Pc.aspect=a;Pc.updateProjectionMatrix()}
 addEventListener('resize',size);size();
-const B={g:document.getElementById('bg'),t:document.getElementById('bt'),p:document.getElementById('bp')},pad=document.getElementById('pad'),hint=document.getElementById('hint'),mmc=document.getElementById('mm'),poi=document.getElementById('poi');
-const H={g:'WASD andar · Shift correr · Espaço pular · mouse/arraste olha ao redor · V = 3ª pessoa',t:'Planta ortográfica · norte para cima',p:'WASD mover · Q/E subir/descer · arraste para olhar · Shift acelera'};
-function setMode(m){mode=m;for(const k in B)B[k].classList.toggle('on',k==m);pad.style.display=m=='t'||!touch?'none':'flex';mmc.style.display=m=='g'?'block':'none';poi.style.display='none';ch.visible=m=='t'||!!tp;hint.textContent=H[m]}
-setMode('g');B.g.onclick=()=>setMode('g');B.t.onclick=()=>setMode('t');B.p.onclick=()=>{tp=tp?0:1;B.p.classList.toggle('on',!!tp);if(mode=='g')ch.visible=!!tp};
-const K={};addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||!started)return;K[e.key.toLowerCase()]=1;if(e.key==' ')e.preventDefault()});addEventListener('keyup',e=>K[e.key.toLowerCase()]=0);
-pad.querySelectorAll('button').forEach(b=>{b.onpointerdown=()=>K[b.dataset.k]=1;b.onpointerup=b.onpointerleave=()=>K[b.dataset.k]=0});
+const viewButton=$('viewToggle'),pad=document.getElementById('pad'),hint=document.getElementById('hint'),mmc=document.getElementById('mm'),poi=document.getElementById('poi');
+const H={g:'WASD andar · Shift correr · Espaço pular · mouse/arraste olha ao redor · V alterna as visões',t:'Planta ortográfica · norte para cima',p:'WASD mover · Q/E subir/descer · arraste para olhar · Shift acelera'};
+function syncViewButton(){const label=mode==='t'?'Planta (topo)':tp?'3ª pessoa':'1ª pessoa';viewButton.title='Visão atual: '+label+' · toque para mudar';viewButton.setAttribute('aria-label','Visão atual: '+label+' · toque para mudar');viewButton.classList.toggle('on',mode==='t'||!!tp)}
+function setMode(m){mode=m;pad.style.display=m=='t'||!touch?'none':'flex';mmc.style.display=m=='g'?'block':'none';poi.style.display='none';ch.visible=m=='t'||!!tp;hint.textContent=H[m];syncViewButton()}
+function cycleView(){if(mode==='t'){tp=0;setMode('g')}else if(!tp){tp=1;ch.visible=true;syncViewButton()}else{tp=0;setMode('t')}}
+setMode('g');viewButton.onclick=cycleView;
+const K={};addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||!started)return;K[e.key.toLowerCase()]=1;if(e.key==' ')e.preventDefault();if(e.key=='Shift')$('run').classList.add('on')});addEventListener('keyup',e=>{K[e.key.toLowerCase()]=0;if(e.key=='Shift'){$('run').classList.remove('on');$('run').setAttribute('aria-pressed','false')}});
+pad.querySelectorAll('button[data-k]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();K[b.dataset.k]=1;if(b.setPointerCapture)b.setPointerCapture(e.pointerId)};const release=()=>K[b.dataset.k]=0;b.onpointerup=b.onpointercancel=b.onlostpointercapture=release});
 let dr=null;R.domElement.addEventListener('pointerdown',e=>dr=e);addEventListener('pointerup',()=>dr=null);
 R.domElement.addEventListener('click',()=>{if(mode=='g'&&matchMedia('(pointer:fine)').matches&&R.domElement.requestPointerLock)try{R.domElement.requestPointerLock()}catch(_){}});
 addEventListener('mousemove',e=>{if(document.pointerLockElement&&mode=='g'){cy-=e.movementX*.0025;cp=Math.max(-1.3,Math.min(1.3,cp-e.movementY*.0025))}});
-addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;const k=e.key.toLowerCase();if(!started)return;if(k=='v')B.p.onclick();if(k=='f')togRad();if(k=='1')doEmote('funk');if(k=='2')doEmote('forro');if(k=='3')doEmote('wave');if(k=='4')doEmote('bow');if(k=='e')actMuki()});
+addEventListener('keydown',e=>{if(e.target.tagName=='INPUT')return;const k=e.key.toLowerCase();if(!started)return;if(k=='v')cycleView();if(k=='f')togRad();if(k=='1')doEmote('funk');if(k=='2')doEmote('forro');if(k=='3')doEmote('wave');if(k=='4')doEmote('bow');if(k=='e')actMuki()});
 addEventListener('pointermove',e=>{if(!dr||mode=='t')return;const dx=e.clientX-dr.clientX,dy=e.clientY-dr.clientY;
  if(mode=='g'){cy-=dx*.005;cp=Math.max(-1.3,Math.min(1.3,cp-e.movementY*.005))}else{yaw-=dx*.005;pitch=Math.max(-1.5,Math.min(1.2,pitch-dy*.005))}dr=e});
 R.domElement.addEventListener('wheel',e=>{if(mode=='g'&&tp)dist=Math.max(2.5,Math.min(9,dist+e.deltaY*.005));else if(mode=='p'){const f=-e.deltaY*.02;Pc.position.x+=-Math.sin(yaw)*f;Pc.position.z+=-Math.cos(yaw)*f}},{passive:true});
@@ -518,7 +544,7 @@ function updateSpeechBubbles(){const now=performance.now(),camera=mode==='t'?O:P
    const onScreen=p.z>=-1&&p.z<=1&&x>=0&&x<=innerWidth&&y>=0&&y<=innerHeight;bubble.el.style.display=onScreen?'block':'none';
    if(onScreen){bubble.el.style.left=x+'px';bubble.el.style.top=y+'px';bubble.el.style.opacity=String(Math.min(1,(bubble.expires-now)/1000))}}}}
 function clearSpeechFor(speaker){const entries=speechBySpeaker.get(speaker);if(entries)for(const item of entries)item.el.remove();speechBySpeaker.delete(speaker)}
-function toggleSocialPanel(which){const panel=$(which+'Panel'),other=$(which==='chat'?'songPanel':'chatPanel'),opening=panel.style.display!=='flex';other.style.display='none';panel.style.display=opening?'flex':'none';
+function toggleSocialPanel(which){const panel=$(which+'Panel'),other=$(which==='chat'?'songPanel':'chatPanel'),opening=panel.style.display!=='flex';other.style.display='none';panel.style.display=opening?'flex':'none';if(opening)em.style.display='none';
  if(opening){if(document.exitPointerLock)document.exitPointerLock();$(which==='chat'?'chatInput':'songInput').focus()}}
 $('chatToggle').onclick=()=>toggleSocialPanel('chat');$('songToggle').onclick=()=>toggleSocialPanel('song');
 $('chatClose').onclick=()=>{$('chatPanel').style.display='none'};$('songClose').onclick=()=>{$('songPanel').style.display='none'};
@@ -690,7 +716,8 @@ $('iy').onclick=()=>{inv.style.display='none';const id=invFrom;invFrom=null;if(!
  window.sendInv(id,{t:'accept'});setEmote('forro',id,0)};
 $('in').onclick=()=>{inv.style.display='none';if(invFrom)window.sendInv(invFrom,{t:'decline'});invFrom=null};
 em.querySelectorAll('button').forEach(b=>b.onclick=()=>doEmote(b.dataset.e));
-$('be').onclick=$('emb').onclick=()=>{em.style.display=em.style.display=='none'?'flex':'none'};
+function toggleEmotes(){const opening=em.style.display==='none';em.style.display=opening?'flex':'none';if(opening){$('chatPanel').style.display='none';$('songPanel').style.display='none'}}
+$('be').onclick=$('emb').onclick=toggleEmotes;
 /* ===== MUKIFO: copão, mão segurando, beber e tontura ===== */
 const PRICE=15,MK={x:-15.5,z:-19.6},TRUCO={x:-8.85,z:-19};let wallet=200,hold=false,drinks=0,trucoOpen=false,poolOpen=false;const DR={on:false,end:0},DZ={on:false,i:0,t0:0,end:0},ctx=$('ctx'),trucoGame=$('trucoGame'),trucoFrame=trucoGame.querySelector('iframe'),sinucaGame=$('sinucaGame'),sinucaFrame=sinucaGame.querySelector('iframe');
 try{localStorage.setItem('walace_wallet','200')}catch(_){}
@@ -708,7 +735,7 @@ function firstPersonDrinkFx(){const active=(hold||DR.on)&&mode=='g'&&!tp;fpDrink
  const p=Math.max(0,Math.min(1,(performance.now()-DR.start)/1900)),lift=p<.35?p/.35:p<.72?1:1-(p-.72)/.28,ease=lift*lift*(3-2*lift);
  const sip=p<.28?0:p<.48?(p-.28)/.2:p<.7?1:p<.9?1-(p-.7)/.2:0;
  fpDrinkRig.position.set(.78-.28*ease,-.82+ease*.21,-1.15+.15*ease);fpDrinkRig.rotation.z=-ease*.12;fpCup.rotation.set(1.45*Math.max(0,sip),0,ease*.04)}
-function hud(){$('wal').textContent='💵 R$ '+wallet+' · 🍹 '+drinks+'/6'}hud();
+function hud(){$('wal').textContent='R$ '+wallet;$('wal').setAttribute('aria-label','Dinheiro: R$ '+wallet)}hud();
 function saveW(){try{localStorage.setItem('walace_wallet',wallet)}catch(_){}hud()}
 function drinkPose(R,left){const p=1-Math.max(0,Math.min(1,left)),k=Math.min(1,p*5)*Math.min(1,(1-p)*5),a=R.a[1];
  a.rotation.x=-2*k+a.rotation.x*(1-k);a.rotation.z=-.55*k;R.root.rotation.x=-.1*k;if(R.cup)R.cup.rotation.x=-a.rotation.x*.85}
@@ -736,7 +763,7 @@ function dizzyFx(){if(!DZ.on)return;const s=performance.now()/1000,i=DZ.i;Pc.rot
  R.domElement.style.filter='blur('+((2.2+Math.sin(s*2)*1.2)*i).toFixed(2)+'px) saturate('+(1+.5*i)+') hue-rotate('+(Math.sin(s*.7)*25*i).toFixed(1)+'deg)';cy+=Math.sin(s*.8)*.0035*i}
 function mukiFx(){const now=performance.now(),near=Math.hypot(PL.x-MK.x,PL.z-MK.z)<5;let txt='';
  if(started&&mode=='g'&&!DR.on&&!trucoOpen&&!poolOpen){if(nearWater())txt='🚰 Bebedouro (E)';else if(nearTruco())txt='🃏 Jogar truco (E)';else if(nearPool())txt='🎱 Jogar sinuca (E)';else if(hold)txt='🥤 Beber (E)';else if(nearC())txt='🏹 Falar com o Chama (E)';else if(nearBar())txt=wallet>=BAR_PRICE?'🍹 Comprar copão R$ '+BAR_PRICE+' (E)':'Sem dinheiro para o copão';else if(near)txt=wallet>=PRICE?'🍹 Comprar copão R$ '+PRICE+' (E)':'Sem dinheiro para o copão'}
- ctx.style.display=txt?'block':'none';if(ctx.textContent!==txt)ctx.textContent=txt;
+ const menuOpen=em.style.display==='flex'||$('chatPanel').style.display==='flex'||$('songPanel').style.display==='flex';ctx.style.display=txt&&!menuOpen?'block':'none';if(ctx.textContent!==txt)ctx.textContent=txt;
  if(DR.on&&now>DR.end)finishDrink();
  if(DZ.on){const left=DZ.end-now;DZ.i=Math.max(0,Math.min(1,(now-DZ.t0)/2500,left/5000));if(left<=0)stopDizzy()}}
 ctx.onclick=actMuki;
