@@ -35,6 +35,25 @@ const $=id=>document.getElementById(id);
 let cfg=Object.assign({diff:1,bo:1,snd:true},JSON.parse(localStorage.getItem('tpcfg')||'{}')),
  st=Object.assign({g:0,w:0},JSON.parse(localStorage.getItem('tpst')||'{}')),G=null,H=null,gid=0,hideMode=false;
 const save=()=>{localStorage.setItem('tpcfg',JSON.stringify(cfg));localStorage.setItem('tpst',JSON.stringify(st))};
+function syncSettings(){ $('settingsDiff').value=String(cfg.diff);$('settingsBo').value=String(cfg.bo);$('settingsSound').checked=cfg.snd}
+function openSettings(){syncSettings();$('settingsPanel').hidden=false}
+function closeSettings(){$('settingsPanel').hidden=true}
+async function enableFullscreenLandscape(){
+ const status=$('displayStatus'),root=document.documentElement;
+ status.textContent='Ativando tela cheia…';
+ try{
+  if(!document.fullscreenElement){
+   const request=root.requestFullscreen||root.webkitRequestFullscreen;
+   if(typeof request!=='function'){status.textContent='Este navegador não oferece tela cheia. Gire o aparelho manualmente.';return}
+   await request.call(root)
+  }
+ }catch(error){status.textContent='O navegador bloqueou a tela cheia. Tente pelo menu do navegador.';console.warn('Não foi possível ativar tela cheia:',error);return}
+ const orientation=screen.orientation;
+ if(orientation&&typeof orientation.lock==='function'){
+  try{await orientation.lock('landscape');status.textContent='Tela cheia ativada no modo horizontal.'}
+  catch(error){status.textContent='Tela cheia ativada. Gire o celular para a horizontal se não girar sozinho.';console.info('O navegador não permitiu travar a orientação:',error)}
+ }else status.textContent='Tela cheia ativada. Gire o celular para a horizontal.'
+}
 function later(ms,fn){const g=gid,h=H;setTimeout(()=>{if(g===gid&&h===H)fn()},ms)}
 function beep(f){if(!cfg.snd)return;try{const a=beep.a||(beep.a=new AudioContext()),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.1)}catch(e){}}
 
@@ -123,9 +142,16 @@ function aiAct(){if(H.phase!=='play'||H.turn!==1)return;if(canRaise(1)&&aiAsk())
  playCard(1,i,hide)}
 
 // ===== MENU E EVENTOS =====
-function toMenu(){gid++;H=null;G=null;$('modal').hidden=true;$('menu').hidden=false;$('diff').value=cfg.diff;$('bo').value=cfg.bo;$('snd').checked=cfg.snd}
+function toMenu(){gid++;H=null;G=null;$('modal').hidden=true;$('menu').hidden=false;closeSettings();syncSettings()}
 $('play').onclick=()=>{G=null;startGame()};
-$('diff').onchange=e=>{cfg.diff=+e.target.value;save()};$('bo').onchange=e=>{cfg.bo=+e.target.value;save()};$('snd').onchange=e=>{cfg.snd=e.target.checked;save()};
+$('menuSettings').onclick=$('settingsOpen').onclick=openSettings;
+$('closeSettings').onclick=closeSettings;
+$('settingsPanel').addEventListener('click',e=>{if(e.target===$('settingsPanel'))closeSettings()});
+$('settingsPanel').addEventListener('keydown',e=>{if(e.key==='Escape')closeSettings()});
+$('displayMode').onclick=enableFullscreenLandscape;
+$('settingsDiff').onchange=e=>{cfg.diff=+e.target.value;save()};
+$('settingsBo').onchange=e=>{cfg.bo=+e.target.value;save()};
+$('settingsSound').onchange=e=>{cfg.snd=e.target.checked;save()};
 $('quit').onclick=()=>{if(G&&!confirm('Voltar ao menu e abandonar a partida?'))return;toMenu()};
 $('btnT').onclick=()=>raise(0);
 $('btnH').onclick=()=>{if(H&&H.phase==='play'&&H.turn===0&&H.rounds.length>0){hideMode=!hideMode;btns();if(hideMode)flash('Clique na carta que deseja esconder',1500)}};
