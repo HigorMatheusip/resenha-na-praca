@@ -66,6 +66,15 @@ canvas{display:block;width:100%;height:100%}
 #sinucaGame{position:fixed;inset:0;z-index:30;display:none;background:#000d}
 #sinucaGame iframe{width:100%;height:100%;border:0;display:block}
 #sinucaClose{position:absolute;right:12px;top:12px;z-index:1;background:#7a1f1f;color:#fff;border:2px solid #fff;border-radius:8px;padding:9px 14px;font:700 14px system-ui;cursor:pointer}
+#instagramMark{position:fixed;right:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);z-index:21;color:#fff;text-decoration:none;font:11px system-ui,sans-serif;opacity:.42;text-shadow:0 1px 3px #000}
+#instagramMark:hover{opacity:.9}
+#betaNotice{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;background:#0009;backdrop-filter:blur(4px)}
+#betaNotice[hidden]{display:none}
+#betaNotice .beta-card{position:relative;width:min(380px,92vw);padding:24px 20px 20px;border-radius:16px;background:var(--bg);color:var(--fg);box-shadow:0 8px 32px #0008;text-align:center;font:14px/1.5 system-ui,sans-serif}
+#betaNotice h2{margin:0 32px 10px 0;font-size:20px}
+#betaNotice p{margin:8px 0}
+#betaNotice a{color:var(--ac);font-weight:700}
+#betaClose{position:absolute;top:8px;right:8px;width:34px;height:34px;border:0;border-radius:9px;background:#8883;color:var(--fg);font:24px/1 system-ui;cursor:pointer}
 /* HUD principal */
 #hud{left:10px;right:auto;top:calc(env(safe-area-inset-top,0px) + 10px);gap:7px;z-index:15;max-width:calc(100vw - 180px)}
 #hud button{width:42px;height:42px;padding:0;border-radius:13px;background:rgba(18,25,36,.78);color:#fff;font-size:19px;box-shadow:0 3px 12px #0004}
@@ -112,6 +121,14 @@ html.emotes-open,html.emotes-open body{touch-action:pan-y}
 <label>Personagem</label><div id="gen"><button data-g="0">Masculino</button><button data-g="1">Feminino</button></div>
 <label>Cor de pele</label><div id="skins"></div>
 <button id="go">Entrar na sala pública · conectando…</button></div></div>
+<a id="instagramMark" href="https://instagram.com/higormatheus.ip" target="_blank" rel="noopener noreferrer">Siga @higormatheus.ip no Instagram</a>
+<div id="betaNotice" role="dialog" aria-modal="true" aria-labelledby="betaTitle">
+<div class="beta-card"><button id="betaClose" type="button" aria-label="Fechar aviso">×</button>
+<h2 id="betaTitle">Aviso: versão beta</h2>
+<p>O jogo ainda está em beta, pode ter bugs e está longe da versão final.</p>
+<p>Encontrou um bug ou tem ideias? Me chama no Instagram:</p>
+<a href="https://instagram.com/higormatheus.ip" target="_blank" rel="noopener noreferrer">@higormatheus.ip</a>
+</div></div>
 <div id="hud"><button id="viewToggle" type="button" aria-label="Mudar visão" title="Mudar visão">👁</button><button id="bu" type="button" aria-label="Personagem" title="Personagem">👤</button><button id="be" type="button" aria-label="Emotes" title="Emotes">💃</button><button id="chatToggle" type="button" aria-label="Chat" title="Chat">💬</button><button id="songToggle" type="button" aria-label="Músicas" title="Músicas">🎵</button><button id="fsToggle" type="button" aria-label="Tela cheia" aria-pressed="false" title="Tela cheia">⛶</button><button id="bs" type="button" aria-label="Som do Wallace" title="Som do Wallace" style="display:none">🔊</button><input id="nick" maxlength="14" placeholder="Seu nome"><span id="who">Offline</span></div><canvas id="mm" width="150" height="112"></canvas><div id="wal" aria-label="Dinheiro">R$ 200</div><div id="poi"></div><div id="ytwin" style="display:none"><button id="ytx">✕</button><div id="yf"></div></div><div id="em" style="display:none"><button data-e="funk">🕺 Dançar funk (1)</button><button data-e="forro">💃 Forró a dois (2)</button><button data-e="wave">👋 Acenar (3)</button><button data-e="bow" id="ebow" style="display:none">🏹 Arco e flecha (4)</button></div><div id="inv" style="display:none"><span id="invt"></span><div><button id="iy">Aceitar</button><button id="in">Recusar</button></div></div><button id="ctx" style="display:none"></button><div id="toast"></div><div id="speechLayer" aria-hidden="true"></div><div id="chatPanel"><div class="social-head"><span>💬 Chat</span><button id="chatClose" type="button" aria-label="Fechar chat">✕</button></div><div id="chatLog" aria-live="polite"></div><form id="chatForm" class="social-form"><input id="chatInput" maxlength="120" placeholder="Escreva uma mensagem..." autocomplete="off"><button type="submit">Enviar</button></form><div class="social-note">Até 30 mensagens no chat · balões somem em 8 s</div></div><div id="songPanel"><div class="social-head"><span>🎵 Sugestões de música</span><button id="songClose" type="button" aria-label="Fechar sugestões">✕</button></div><ol id="songList"></ol><form id="songForm" class="social-form"><input id="songInput" maxlength="100" placeholder="Música e artista..." autocomplete="off"><button type="submit">Sugerir</button></form><div class="social-note">Lista compartilhada · máximo de 20 sugestões</div></div><div id="rad" style="display:none"><button id="radx">✕</button><b>Carro do Wallace · Som</b><input id="yt" type="text" placeholder="Link do YouTube"><button id="ytp">▶ YouTube (todos)</button><button id="tab">🎧 Capturar aba (3D)</button><label>Arquivo de áudio<input id="fl" type="file" accept="audio/*" hidden></label><button id="stp">■ Parar</button><div id="lbl"></div><small><b>Arquivo</b> e <b>Capturar aba</b> tocam em 3D de verdade para todos (HRTF: o som vem do porta-malas, muda de lado e cai com a distância). Para o YouTube em 3D: abra o vídeo em outra aba, dê play, clique em Capturar aba e marque “compartilhar áudio da aba” (Chrome/Edge no PC). O botão <b>YouTube</b> usa o player incorporado: ressincroniza a cada 2 s e tem volume por distância, sem direção. O player só aparece perto do carro (✕ esconde).</small></div>
 <div id="pad"><div id="dp"><span></span><button data-k="w">▲</button><span></span><button data-k="a">◀</button><button data-k="s">▼</button><button data-k="d">▶</button></div><div id="ac"><button data-k=" ">⤒</button><button id="run" type="button" aria-label="Correr" aria-pressed="false">🏃</button><button id="vw" type="button" aria-label="Mudar visão">👁</button><button id="snd" type="button" style="display:none" aria-label="Som do Wallace">🔊</button><button id="emb" type="button" aria-label="Emotes">💃</button></div></div>
 <div id="hint">WASD andar · Shift correr · Espaço pular · mouse/arraste olha ao redor · V = 3ª pessoa</div>
@@ -551,7 +568,7 @@ function enter(){
      window.speechSynthesis.speak(initVoice);
  }
 }
-$('go').onclick=enter;lname.onkeydown=e=>{if(e.key=='Enter')enter()};$('bu').onclick=openLogin;paintSk();setTimeout(()=>lname.focus(),50);
+$('go').onclick=enter;lname.onkeydown=e=>{if(e.key=='Enter')enter()};$('bu').onclick=openLogin;$('betaClose').onclick=()=>{$('betaNotice').hidden=true;lname.focus()};paintSk();setTimeout(()=>$('betaClose').focus(),50);
 const cleanSocialText=(value,max)=>typeof value==='string'?value.replace(/[\u0000-\u001f\u007f]/g,' ').trim().slice(0,max):'';
 function newSocialId(){return Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,9)}
 function rememberSocialId(id){if(!id||seenSocialIds.has(id))return false;seenSocialIds.add(id);if(seenSocialIds.size>600)seenSocialIds.delete(seenSocialIds.values().next().value);return true}
