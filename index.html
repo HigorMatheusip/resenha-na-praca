@@ -398,7 +398,12 @@ async function toggleFullscreen(){const exit=document.exitFullscreen||document.w
 fsButton.onclick=toggleFullscreen;['fullscreenchange','webkitfullscreenchange'].forEach(event=>document.addEventListener(event,syncFullscreenButton));syncFullscreenButton();
 function togRad(force){const o=force===undefined?rad.style.display=='none':force;if(o&&dCar()>NEAR){toast('Chegue perto do carro do Wallace para mexer no som');return}rad.style.display=o?'block':'none';if(o&&document.exitPointerLock)document.exitPointerLock()}
 $('bs').onclick=()=>togRad();$('radx').onclick=()=>togRad(false);$('ytx').onclick=()=>{ytHide=true;ytwin.classList.add('far')};
-$('run').onclick=()=>{K.shift=!K.shift;$('run').classList.toggle('on',!!K.shift);$('run').setAttribute('aria-pressed',String(!!K.shift))};$('vw').onclick=cycleView;$('snd').onclick=()=>togRad();
+const runButton=$('run');
+function setRunning(active){K.shift=active;runButton.classList.toggle('on',active);runButton.setAttribute('aria-pressed',String(active))}
+function toggleRunning(){setRunning(!K.shift)}
+runButton.onpointerdown=e=>{e.preventDefault();toggleRunning()};
+runButton.onclick=e=>{if(e.detail===0)toggleRunning()};
+$('vw').onclick=cycleView;$('snd').onclick=()=>togRad();
 if(touch){$('hint').style.display='none';$('tab').style.display='none'}else if(!(navigator.mediaDevices&&navigator.mediaDevices.getDisplayMedia))$('tab').style.display='none';
 function attach(node){const g=ac().createGain();node.connect(g);g.connect(anl);curG=g}
 function out(stream){outS=stream;if(netRoom)netRoom.addStream(stream)}
@@ -493,7 +498,7 @@ function syncViewButton(){const label=mode==='t'?'Planta (topo)':tp?'3ª pessoa'
 function setMode(m){mode=m;pad.style.display=m=='t'||!touch?'none':'flex';mmc.style.display=m=='g'?'block':'none';poi.style.display='none';ch.visible=m=='t'||!!tp;hint.textContent=H[m];syncViewButton()}
 function cycleView(){if(mode==='t'){tp=0;setMode('g')}else if(!tp){tp=1;ch.visible=true;syncViewButton()}else{tp=0;setMode('t')}}
 setMode('g');viewButton.onclick=cycleView;
-const K={};addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||!started)return;K[e.key.toLowerCase()]=1;if(e.key==' ')e.preventDefault();if(e.key=='Shift')$('run').classList.add('on')});addEventListener('keyup',e=>{K[e.key.toLowerCase()]=0;if(e.key=='Shift'){$('run').classList.remove('on');$('run').setAttribute('aria-pressed','false')}});
+const K={};addEventListener('keydown',e=>{if(e.target.tagName=='INPUT'||!started)return;K[e.key.toLowerCase()]=1;if(e.key==' ')e.preventDefault();if(e.key=='Shift')setRunning(true)});addEventListener('keyup',e=>{K[e.key.toLowerCase()]=0;if(e.key=='Shift')setRunning(false)});
 pad.querySelectorAll('button[data-k]').forEach(b=>{b.onpointerdown=e=>{e.preventDefault();K[b.dataset.k]=1;if(b.setPointerCapture)b.setPointerCapture(e.pointerId)};const release=()=>K[b.dataset.k]=0;b.onpointerup=b.onpointercancel=b.onlostpointercapture=release});
 let dr=null;R.domElement.addEventListener('pointerdown',e=>dr=e);addEventListener('pointerup',()=>dr=null);
 R.domElement.addEventListener('click',()=>{if(mode=='g'&&matchMedia('(pointer:fine)').matches&&R.domElement.requestPointerLock)try{R.domElement.requestPointerLock()}catch(_){}});
@@ -842,7 +847,7 @@ const aw=new THREE.Mesh(new THREE.BoxGeometry(6.8,.08,1.5),M(0xffffff,{map:strip
 const bar=mkChar(0xc03030,SKIN[3]);bar.position.set(MK.x,0,MK.z-.75);setLabel(bar,'Deco');
 /* Mesa amarela de truco no centro da praça */
 {
- const tx=-10.2,tz=-19,yellow=M(0xf2c400,{roughness:.55}),chairWood=M(0x7a4a2a);
+ const tx=-10.2,tz=-19,yellow=M(0xffd400,{roughness:.55}),chairWood=M(0x7a4a2a);
  const top=new THREE.Mesh(new THREE.CylinderGeometry(.9,.9,.14,24),yellow);top.position.set(tx,1.12,tz);top.castShadow=top.receiveShadow=true;S.add(top);
  const base=new THREE.Mesh(new THREE.CylinderGeometry(.1,.18,1.05,12),chairWood);base.position.set(tx,.53,tz);base.castShadow=true;S.add(base);
  for(const side of [-1,1]){
